@@ -7,15 +7,31 @@ local selectedTile = Tile.byName["wall"]
 love.window.setTitle("Level Editor")
 local mousePressed = false
 local width, height = love.graphics.getDimensions()
-local tileWidth, tileHeight = Screen.getScreenPosition(width, height)
+local tileWidth, tileHeight = width / TileSize, height / TileSize
 Screen.init(tileWidth, tileHeight)
 
 function love.mousepressed(x, y, button, istouch, presses)
 	-- Todo: Handle mouse presses to draw tiles
+	if button ~= 1 then
+		return
+	end
+	x, y = Screen.getTilePosition(x, y)
+	Screen.setTile(x, y, selectedTile)
 end
 
 function love.mousemoved(x, y, dx, dy, isTouch)
-	-- Todo: Handle mouse drags to draw tiles
+	if not love.mouse.isDown(1) then
+		return
+	end
+	local newX, newY = x + dx, y + dy
+	-- Get new tile coordinates
+	local tx, ty = Screen.getTilePosition(newX, newY)
+	-- Get old tile coordinates
+	local otx, oty = Screen.getTilePosition(x, y)
+	if tx == otx and ty == oty then
+		return
+	end
+	Screen.setTile(tx, ty, selectedTile)
 end
 
 function love.update()
