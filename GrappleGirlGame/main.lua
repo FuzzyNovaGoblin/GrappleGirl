@@ -4,7 +4,8 @@ require("Music")
 
 function love.load()
     gGirl = Character:new(nil);
-    music = love.audio.play(, "stream", true)
+    music = love.audio.play("Dioma.mp3", "stream", true)
+    music:setVolume(0.75)
 end
 
 function love.update(dt)
@@ -15,6 +16,8 @@ end
 function love.keypressed(key)
     if key == 'p' then
         love.audio.play(music)
+    elseif key == 's' then
+        love.audio.stop(music)
     end
 end
 
