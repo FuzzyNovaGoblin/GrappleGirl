@@ -11,12 +11,19 @@ local tileWidth, tileHeight = width / TileSize, height / TileSize
 Screen.init(tileWidth, tileHeight)
 
 function love.mousepressed(x, y, button, istouch, presses)
-	-- Todo: Handle mouse presses to draw tiles
 	if button ~= 1 then
 		return
 	end
 	x, y = Screen.getTilePosition(x, y)
 	Screen.setTile(x, y, selectedTile)
+end
+
+function love.keypressed(key, scancode, isrepeat)
+	local num = tonumber(key)
+	if num == nil then
+		return
+	end
+	selectedTile = Tile[num] or selectedTile
 end
 
 function love.mousemoved(x, y, dx, dy, isTouch)
