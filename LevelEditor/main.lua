@@ -5,10 +5,19 @@ require("camera")
 -- Initialize everything
 local selectedTile = Tile.byName["wall"]
 love.window.setTitle("Level Editor")
+love.window.setMode(1200, 800)
 local mousePressed = false
-local width, height = love.graphics.getDimensions()
-local tileWidth, tileHeight = width / TileSize, height / TileSize
-Screen.init(tileWidth, tileHeight)
+local tileWidth, tileHeight
+
+function love.load(arg)
+	if #arg < 2 then
+		local width, height = love.graphics.getDimensions()
+		tileWidth, tileHeight = width / TileSize, height / TileSize
+	else
+		tileWidth, tileHeight = tonumber(arg[1]), tonumber(arg[2])
+	end
+	Screen.init(tileWidth, tileHeight)
+end
 
 function love.mousepressed(x, y, button, istouch, presses)
 	-- Todo: Handle mouse presses to draw tiles
@@ -16,6 +25,7 @@ function love.mousepressed(x, y, button, istouch, presses)
 		return
 	end
 	x, y = Screen.getTilePosition(x, y)
+	print(x.." "..y)
 	Screen.setTile(x, y, selectedTile)
 end
 

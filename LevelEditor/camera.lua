@@ -3,10 +3,10 @@ Camera = {x = 0, y = 0}
 -- Call periodically to allow camera panning, call in love.update
 function Camera.update()
     -- Set default move speed
-	local diff = 4
+	local diff = 8
 	-- If left shift is pressed, move faster
 	if love.keyboard.isDown("lshift") then
-		diff = 10
+		diff = 20
 	end
 	-- Handle WASD for camera movement
 	if love.keyboard.isDown("w") then
