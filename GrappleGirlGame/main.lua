@@ -9,7 +9,6 @@ function love.load()
 end
 
 function love.update(dt)
-    love.audio.update()
     gGirl:update(dt);
 end
 
