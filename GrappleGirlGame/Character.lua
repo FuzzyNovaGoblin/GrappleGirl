@@ -35,10 +35,13 @@ end
 function Character:draw()
     local x, y = self.body:getPosition()
 
+    x, y = Camera:applyOffset(x, y)
+
     love.graphics.circle("fill", x, y, 10)
 
     if self.grapplepod.body ~= nil then
         local ax, ay = self.grapplepod.body:getPosition()
+        ax, ay = Camera:applyOffset(ax, ay)
         love.graphics.circle("fill", ax, ay, 1)
         love.graphics.line(x, y, ax, ay)
     end
@@ -65,8 +68,9 @@ function normalize(x, y)
     return (x / v), (y / v)
 end
 
-function Character:ropeMousePressedCallbackshootRope()
+function Character:ropeMousePressedCallbackshootRope(vp)
     local mx, my = love.mouse:getPosition()
+    mx, my = vp:reverseOffset(mx,my)
     local x, y = self.body:getPosition()
     self.grapplepod.body = love.physics.newBody(baseWorld, x, y, "dynamic")
     self.grapplepod.fixture = love.physics.newFixture(self.grapplepod.body, self.grapplepod.shape, 1)
