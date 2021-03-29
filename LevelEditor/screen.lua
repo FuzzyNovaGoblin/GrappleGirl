@@ -26,6 +26,14 @@ function Screen.isInBounds(x, y)
     return not (x > Screen.width or y > Screen.height)
 end
 
+function Screen.setSpawn(spawnx, spawny)
+    tiles.spawn = {x = spawnx, y = spawny}
+end
+
+function Screen.setExit(exitx, exity)
+    tiles.exit = {x = exitx, y = exity}
+end
+
 -- Get the tile position from a pixel position
 function Screen.getTilePosition(x, y)
     x = x - Camera.x
@@ -46,6 +54,16 @@ function Screen.setTile(x, y, tile)
     tiles[x][y] = tile
 end
 
+-- Convert pixel coordinates to where they should be drawn on the screen
+function Screen.adjustPositionForDrawing(x, y)
+    return x + Camera.x, (Screen.height * TileSize) - y + Camera.y
+end
+
+-- Convert pixel coordinates from virtual positions to where they are physically on the screen
+function Screen.adjustPositionForScreen(x, y)
+    return x - Camera.x, (Screen.height * TileSize) - y - Camera.y
+end
+
 -- Get a tile on the screen
 function Screen.getTile(x, y)
     local tile = tiles[x][y]
@@ -61,6 +79,16 @@ function Screen.drawScreen()
         for py = 1, Screen.height, 1 do
             Screen.drawTile(Screen.getTile(px, py), px - 1, py - 1)
         end
+    end
+    if tiles.spawn ~= nil then
+        local posx, posy = Screen.adjustPositionForDrawing(tiles.spawn.x, tiles.spawn.y)
+        love.graphics.setColor(0, 255, 0)
+        love.graphics.circle("fill", posx, posy, TileSize / 2)
+    end
+    if tiles.exit ~= nil then
+        local posx, posy = Screen.adjustPositionForDrawing(tiles.exit.x, tiles.exit.y)
+        love.graphics.setColor(255, 0, 0)
+        love.graphics.circle("fill", posx, posy, TileSize / 2)
     end
 end
 

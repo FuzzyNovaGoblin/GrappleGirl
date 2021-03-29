@@ -44,6 +44,18 @@ function love.mousemoved(x, y, dx, dy, isTouch)
 	Screen.setTile(tx, ty, selectedTile)
 end
 
+function love.keypressed(key)
+	if key == "[" then
+		local x, y = love.mouse.getPosition()
+		x, y = Screen.adjustPositionForScreen(x, y)
+		Screen.setSpawn(x, y)
+	elseif key == "]" then
+		local x, y = love.mouse.getPosition()
+		x, y = Screen.adjustPositionForScreen(x, y)
+		Screen.setExit(x, y)
+	end
+end
+
 function love.update()
 	-- Hand off update to Camera
 	Camera.update()
