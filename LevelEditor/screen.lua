@@ -35,7 +35,7 @@ end
 
 -- Get the screen pixel position from a tile position
 function Screen.getScreenPosition(x, y)
-    return (x * TileSize) + Camera.x, (height - ((y + 1) * TileSize)) + Camera.y
+    return (x * TileSize) + Camera.x, (Screen.height * TileSize - ((y + 1) * TileSize)) + Camera.y
 end
 
 -- Set a tile on the screen
