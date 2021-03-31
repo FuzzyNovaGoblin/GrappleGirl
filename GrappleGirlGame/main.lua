@@ -1,9 +1,13 @@
 require("Character")
 require("love")
+require("music")
 require("camera")
 FLOOR_CATEGORY = 4
 
 function love.load()
+    music = love.audio.play("audio/music/Dioma.mp3", "stream", true)
+    music:setVolume(0.75)
+
     baseWorld = love.physics.newWorld(0, 1000, false)
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
     viewport = Camera:new(love.graphics.getWidth(), love.graphics.getHeight(), 0.25, 0.40, nil, 0.20)
@@ -87,6 +91,16 @@ function love.update(dt)
     baseWorld:update(dt)
     gGirl:update(dt)
     Camera:update(gGirl)
+end
+
+function love.keypressed(key)
+    if key == 'p' then
+        -- plays from stopped position
+        love.audio.play(music)
+    elseif key == 's' then
+        -- only pauses audio doesn't reset
+        love.audio.stop(music)
+    end
 end
 
 function love.draw()
