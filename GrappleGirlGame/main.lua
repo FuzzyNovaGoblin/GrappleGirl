@@ -1,6 +1,7 @@
 require("Character")
 require("love")
 require("music")
+require("camera")
 FLOOR_CATEGORY = 4
 
 function love.load()
@@ -9,6 +10,7 @@ function love.load()
 
     baseWorld = love.physics.newWorld(0, 1000, false)
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
+    viewport = Camera:new(love.graphics.getWidth(), love.graphics.getHeight(), 0.25, 0.40, nil, 0.20)
 
     -- floor --
     floor = {}
@@ -88,6 +90,7 @@ function love.update(dt)
 
     baseWorld:update(dt)
     gGirl:update(dt)
+    Camera:update(gGirl)
 end
 
 function love.keypressed(key)
@@ -105,6 +108,7 @@ function love.draw()
 
     local gaPos = {}
     gaPos.x, gaPos.y = grappleAnchorBlock.body:getPosition()
+    gaPos.x, gaPos.y = Camera:applyOffset(gaPos.x, gaPos.y)
     love.graphics.rectangle("fill", gaPos.x - 25, gaPos.y - 25, 50, 50)
 end
 
@@ -115,7 +119,7 @@ end
 
 function love.mousepressed(x, y, button, istouch, presses)
     if button == 1 then
-        gGirl:ropeMousePressedCallbackshootRope()
+        gGirl:ropeMousePressedCallbackshootRope(viewport)
     end
 end
 
