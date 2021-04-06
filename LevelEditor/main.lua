@@ -1,6 +1,7 @@
 require("tiles")
 require("screen")
 require("camera")
+require("savefile")
 
 -- Initialize everything
 local selectedTile = Tile.byName["wall"]
@@ -53,6 +54,9 @@ function love.keypressed(key)
 		local x, y = love.mouse.getPosition()
 		x, y = Screen.adjustPositionForScreen(x, y)
 		Screen.setExit(x, y)
+	end
+	if key == "s" and love.keyboard.isDown("lctrl") then
+		SaveFile.save(Screen.getAllTiles(), "../level.lua")
 	end
 end
 
