@@ -78,7 +78,7 @@ end
 
 -- Convert pixel coordinates from virtual positions to where they are physically on the screen
 function Screen.adjustPositionForScreen(x, y)
-    return x - Camera.x, (tiles.height * TileSize) - y - Camera.y
+    return x - Camera.x, (tiles.height * TileSize) - y + Camera.y
 end
 
 -- Get a tile on the screen
