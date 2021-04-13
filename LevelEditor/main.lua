@@ -11,6 +11,12 @@ local mousePressed = false
 local tileWidth, tileHeight
 
 function love.load(arg)
+	if #arg == 1 then
+		local filename = arg[1]
+		loadfile(filename)()
+		Screen.loadTiles(level)
+		return
+	end
 	if #arg < 2 then
 		local width, height = love.graphics.getDimensions()
 		tileWidth, tileHeight = width / TileSize, height / TileSize
@@ -26,7 +32,6 @@ function love.mousepressed(x, y, button, istouch, presses)
 		return
 	end
 	x, y = Screen.getTilePosition(x, y)
-	print(x.." "..y)
 	Screen.setTile(x, y, selectedTile)
 end
 
@@ -57,6 +62,10 @@ function love.keypressed(key)
 	end
 	if key == "s" and love.keyboard.isDown("lctrl") then
 		SaveFile.save(Screen.getAllTiles(), "../level.lua")
+	end
+	local num = tonumber(key)
+	if num ~= nil then
+		selectedTile = Tile[num]
 	end
 end
 

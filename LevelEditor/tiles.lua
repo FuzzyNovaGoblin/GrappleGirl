@@ -4,17 +4,17 @@ Tile = {
 	{
 		name = "air",
 		color = {255, 255, 255},
-		id = 0
+		id = 1
 	},
 	{
 		name = "wall",
 		color = {0, 0, 0},
-		id = 1
+		id = 2
 	},
 	{
 		name = "lava",
 		color = {255, 0, 0},
-		id = 2
+		id = 3
 	}
 }
 TileSize = 20

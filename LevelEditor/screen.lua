@@ -19,6 +19,17 @@ function Screen.init(x, y)
     end
 end
 
+-- 
+function Screen.loadTiles(arg)
+    Screen.tiles = arg
+    tiles = arg
+    for px = 1, tiles.width, 1 do
+        for py = 1, tiles.height, 1 do
+            tiles[px][py] = Tile[tiles[px][py]]
+        end
+    end
+end
+
 -- Check if a tile is within the bounds of the screen
 function Screen.isInBounds(x, y)
     if x < 1 or y < 1 then
