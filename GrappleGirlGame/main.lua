@@ -15,30 +15,12 @@ function love.load()
 
     baseWorld = love.physics.newWorld(0, 1000, false)
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
+
     viewport = Camera:new(love.graphics.getWidth(), love.graphics.getHeight(), 0.25, 0.40, nil, 0.20)
-
-    -- floor --
-    floor = {}
-    floor.shape = love.physics.newRectangleShape(love.graphics.getWidth(), 100)
-    floor.body = love.physics.newBody(baseWorld, love.graphics.getWidth() / 2, love.graphics.getHeight(), "static")
-    floor.fixture = love.physics.newFixture(floor.body, floor.shape, 1)
-    floor.fixture:setFriction(1)
-    floor.fixture:setCategory(FLOOR_CATEGORY, 10, 9)
-    -- floor end --
-
-    -- grappleAnchorBlock --
-    grappleAnchorBlock = {}
-    grappleAnchorBlock.shape = love.physics.newRectangleShape(50, 50)
-    grappleAnchorBlock.body =
-        love.physics.newBody(baseWorld, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, "kinematic")
-    grappleAnchorBlock.fixture = love.physics.newFixture(grappleAnchorBlock.body, grappleAnchorBlock.shape, 1)
-    grappleAnchorBlock.fixture:setFriction(1)
-    grappleAnchorBlock.fixture:setCategory(BLOCK_CATEGORY)
-    -- grappleAnchorBlock end --
 
     baseWorld:setCallbacks(baseWorld.beginContact, baseWorld.endContact, mypresolve, mypostSolve)
 
-    theLevel = Level:loadLevel("levels/level1.lua")
+    Level:loadLevel("levels/level2.lua")
 end
 
 function doesContainCatagory(fixt, cat)
@@ -57,6 +39,9 @@ function love.update(dt)
     baseWorld:update(dt)
     gGirl:update(dt)
     Camera:update(gGirl)
+    if gGirl.body then
+        -- print(gGirl.body:getPosition())
+    end
 end
 
 function love.keypressed(key)
@@ -71,16 +56,13 @@ end
 
 function love.draw()
     gGirl:draw()
-    for i = 1, #theLevel.blocks do
-        -- theLevel.blocks[i]:draw()
+    for i = 1, #(Level.blocks) do
+        Block:draw(Level.blocks[i])
+
     end
-    local gaPos = {}
-    gaPos.x, gaPos.y = grappleAnchorBlock.body:getPosition()
-    gaPos.x, gaPos.y = Camera:applyOffset(gaPos.x, gaPos.y)
-    love.graphics.rectangle("fill", gaPos.x - 25, gaPos.y - 25, 50, 50)
-    gaPos.x, gaPos.y = theLevel.blocks[1].body:getPosition()
-    gaPos.x, gaPos.y = Camera:applyOffset(gaPos.x, gaPos.y)
-    love.graphics.rectangle("fill", gaPos.x - 25, gaPos.y - 25, 50, 50)
+    -- print()
+    -- print()
+    -- print(#Level.blocks)
 end
 
 function mypostSolve(f1, f2, contact)
