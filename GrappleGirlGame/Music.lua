@@ -8,7 +8,6 @@ function playAudio(audio, audio_type, loop)
         src = love.audio.newSource(audio, audio_type)
         src:setLooping(loop or false)
     end
-    print(type(audio) )
 
     love.audio.play(src)
     return src
