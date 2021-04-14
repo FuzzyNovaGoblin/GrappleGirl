@@ -1,11 +1,12 @@
 require("Character")
 require("love")
-require("music")
+require("Music")
 require("camera")
+
 FLOOR_CATEGORY = 4
 
 function love.load()
-    music = love.audio.play("audio/music/Dioma.mp3", "stream", true)
+    music = playAudio("audio/music/Dioma.mp3", "stream", true)
     music:setVolume(0.75)
 
     baseWorld = love.physics.newWorld(0, 1000, false)
@@ -32,6 +33,9 @@ function love.load()
     -- grappleAnchorBlock end --
 
     baseWorld:setCallbacks(baseWorld.beginContact, baseWorld.endContact, mypresolve, mypostSolve)
+
+
+    loadLevel('levels/level1.lua')
 end
 
 function doesContainCatagory(fixt, cat)
@@ -96,10 +100,10 @@ end
 function love.keypressed(key)
     if key == 'p' then
         -- plays from stopped position
-        love.audio.play(music)
+        playAudio(music)
     elseif key == 's' then
         -- only pauses audio doesn't reset
-        love.audio.stop(music)
+        stopAudio(music)
     end
 end
 
