@@ -1,9 +1,8 @@
+require("config")
 CHARACTER_CATEGORY = 2
 GRAPPLEPOD_CATEGORY = 3
 
 GRAPPLE_COIL_SPEED = 500
-SHORTEN_COIL_KEY = "w"
-LENGTHEN_COIL_KEY = "s"
 
 Character = {}
 
@@ -53,14 +52,14 @@ end
 
 function Character:update(dt)
     local f = 1000
-    if (love.keyboard.isDown("a")) then
+    if (love.keyboard.isDown(CHARACTER_LEFT_KEY)) then
         self.body:applyForce(-f, 0)
     end
-    if (love.keyboard.isDown("d")) then
+    if (love.keyboard.isDown(CHARACTER_RIGHT_KEY)) then
         self.body:applyForce(f, 0)
     end
 
-    if (self.canJump and love.keyboard.isDown("space")) then
+    if (self.canJump and love.keyboard.isDown(CHARACTER_JUMP_KEY)) then
         self.canJump = false
         self.body:applyLinearImpulse(0, -400)
     end
