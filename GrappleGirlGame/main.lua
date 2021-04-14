@@ -2,6 +2,8 @@ require("Character")
 require("love")
 require("music")
 require("camera")
+local Anim = require("animation")
+
 FLOOR_CATEGORY = 4
 
 local full_sprite
@@ -15,14 +17,16 @@ local frame = 1
 local animation_timer = 1 / fps
 local x_offset
 local num_frames = 6
+---------------------
+
+local run = Anim:new(16, 32, 16, 16, 6, 6, 12)
 
 function love.load()
     music = love.audio.play("audio/music/Dioma.mp3", "stream", true)
     music:setVolume(0.75)
 
-    full_sprite = love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.graphics.setDefaultFilter('nearest', 'nearest')
     full_sprite = love.graphics.newImage("sprites/hero.png")
-    hero_sprite = love.graphics.newQuad(16,32,16,16,full_sprite:getDimensions())
     
     baseWorld = love.physics.newWorld(0, 1000, false)
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
@@ -65,14 +69,7 @@ end
 function love.update(dt)
     local contacts = baseWorld:getContacts()
 
-    animation_timer = animation_timer - dt
-    if animation_timer <= 0 then
-        frame = frame + 1
-        animation_timer = 1 / fps
-        if frame > num_frames then frame = 1 end
-        x_offset = 16 * frame
-        hero_sprite:setViewport(x_offset, 32, 16, 16)
-    end
+    run:update(dt)
 
     for i = 1, #baseWorld:getContacts() do
         f1, f2 = contacts[i]:getFixtures()

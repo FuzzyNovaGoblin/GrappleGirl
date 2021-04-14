@@ -1,22 +1,43 @@
+local class = require("class")
+local Animation = class:derive("Animation")
+local vector2 = require("Vector2")
 
+-- credit to recursor on youtube
 
--- https://love2d.org/wiki/Tutorial:Animation
---[[function newAnimation(image, width, height, duration)
-    local animation = {}
-    animation.spriteSheet = image;
-    animation.quads = {};
-
-    for y = 0, image:getHeight() - height, height do
-        for x = 0, image:getWidth() - width, width do
-            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
-        end
-    end
-
-    animation.duration = duration or 1
-    animation.currentTime = 0
-
-    return animation
+function Animation:new(xoffset, yoffset, w, h, column_size, num_frames, fps)
+    self.fps = fps
+    self.timer = 1 / self.fps
+    self.frame = 1
+    self.num_frames = num_frames
+    self.column_size = column_size 
+    self.str_offset = vector2(xoffset, yoffset)
+    self.offset = vector2()
+    self.size = vector2(w, h)
 end
-]]-- 
 
+function Animation:reset()
+    self.timer = 1 / self.fps
+    self.frame = 1
+end
 
+function Animation:set(quad)
+    quad:setViewport(self.offset.x, self.offset.y, self.size.x, self.size.y)
+end
+
+function Animation:update(dt, quad)
+    if(self.num_frames <= 1) then return end
+
+    self.timer = self.timer - dt
+    if (self.timer <= 0) then
+        self.timer = 1 / self.fps
+        self.frame = self.frame + 1
+        if self.frame > self.num_frames then 
+            self.frame = 1 
+        end
+        self.offset.x = self.str_offset.x + (self.size.x * ((self.frame -1) % (self.column_size)))
+        self.offset.y = self.str_offset.y + (self.size.y * (self.size.y * math.floor((self.frame - 1) / self.column_size)))
+        self:set(quad)
+    end
+end
+
+return Animation
