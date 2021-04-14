@@ -14,7 +14,6 @@ function Screen.init(x, y)
         tiles[px] = {}
         for py = 1, y, 1 do
             tiles[px][py] = Tile.byName["air"]
-            -- Screen.setTile(x, y, Tile.byName["air"])
         end
     end
 end
@@ -46,11 +45,17 @@ function Screen.setExit(exitx, exity)
     tiles.exit = {x = exitx, y = exity}
 end
 
--- Get the tile position from a pixel position
+-- Get the int position of a tile from pixel positions
 function Screen.getTilePosition(x, y)
+    x, y = Screen.getTilePositionFloat(x, y)
+    return math.floor(x) + 1, math.ceil(y) + 1
+end
+
+-- Get the in-game position from pixel position
+function Screen.getTilePositionFloat(x, y)
     x = x - Camera.x
     y = (y - Camera.y)
-    return math.floor(x / TileSize) + 1, tiles.height - math.floor(y / TileSize)
+    return x / TileSize, tiles.height - y / TileSize - 1
 end
 
 -- Get the screen pixel position from a tile position
@@ -82,15 +87,6 @@ function Screen.getAllTiles()
     return toSave
 end
 
--- Convert pixel coordinates to where they should be drawn on the screen
-function Screen.adjustPositionForDrawing(x, y)
-    return x + Camera.x, (tiles.height * TileSize) - y + Camera.y
-end
-
--- Convert pixel coordinates from virtual positions to where they are physically on the screen
-function Screen.adjustPositionForScreen(x, y)
-    return x - Camera.x, (tiles.height * TileSize) - y + Camera.y
-end
 
 -- Get a tile on the screen
 function Screen.getTile(x, y)
@@ -109,12 +105,12 @@ function Screen.drawScreen()
         end
     end
     if tiles.spawn ~= nil then
-        local posx, posy = Screen.adjustPositionForDrawing(tiles.spawn.x, tiles.spawn.y)
+        local posx, posy = Screen.getScreenPosition(tiles.spawn.x, tiles.spawn.y)
         love.graphics.setColor(0, 255, 0)
         love.graphics.circle("fill", posx, posy, TileSize / 2)
     end
     if tiles.exit ~= nil then
-        local posx, posy = Screen.adjustPositionForDrawing(tiles.exit.x, tiles.exit.y)
+        local posx, posy = Screen.getScreenPosition(tiles.exit.x, tiles.exit.y)
         love.graphics.setColor(255, 0, 0)
         love.graphics.circle("fill", posx, posy, TileSize / 2)
     end

@@ -53,11 +53,11 @@ end
 function love.keypressed(key)
 	if key == "[" then
 		local x, y = love.mouse.getPosition()
-		x, y = Screen.adjustPositionForScreen(x, y)
+		x, y = Screen.getTilePositionFloat(x, y)
 		Screen.setSpawn(x, y)
 	elseif key == "]" then
 		local x, y = love.mouse.getPosition()
-		x, y = Screen.adjustPositionForScreen(x, y)
+		x, y = Screen.getTilePositionFloat(x, y)
 		Screen.setExit(x, y)
 	end
 	if key == "s" and love.keyboard.isDown("lctrl") then
