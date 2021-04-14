@@ -2,6 +2,7 @@ require("Character")
 require("love")
 require("Music")
 require("camera")
+require("Levels")
 
 FLOOR_CATEGORY = 4
 
@@ -98,10 +99,10 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-    if key == 'p' then
+    if key == '=' then
         -- plays from stopped position
         playAudio(music)
-    elseif key == 's' then
+    elseif key == '-' then
         -- only pauses audio doesn't reset
         stopAudio(music)
     end
