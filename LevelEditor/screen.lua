@@ -3,17 +3,28 @@ require("camera")
 
 Screen = {}
 local tiles = {}
+Screen.tiles = tiles
 local width, height = love.graphics.getDimensions()
 
 -- Initialize the screen
 function Screen.init(x, y)
-    Screen.width = x
-    Screen.height = y
+    tiles.width = x
+    tiles.height = y
     for px = 1, x, 1 do
         tiles[px] = {}
         for py = 1, y, 1 do
             tiles[px][py] = Tile.byName["air"]
-            -- Screen.setTile(x, y, Tile.byName["air"])
+        end
+    end
+end
+
+-- 
+function Screen.loadTiles(arg)
+    Screen.tiles = arg
+    tiles = arg
+    for px = 1, tiles.width, 1 do
+        for py = 1, tiles.height, 1 do
+            tiles[px][py] = Tile[tiles[px][py]]
         end
     end
 end
@@ -23,7 +34,7 @@ function Screen.isInBounds(x, y)
     if x < 1 or y < 1 then
         return false
     end
-    return not (x > Screen.width or y > Screen.height)
+    return not (x > tiles.width or y > tiles.height)
 end
 
 function Screen.setSpawn(spawnx, spawny)
@@ -34,16 +45,22 @@ function Screen.setExit(exitx, exity)
     tiles.exit = {x = exitx, y = exity}
 end
 
--- Get the tile position from a pixel position
+-- Get the int position of a tile from pixel positions
 function Screen.getTilePosition(x, y)
+    x, y = Screen.getTilePositionFloat(x, y)
+    return math.floor(x) + 1, math.ceil(y) + 1
+end
+
+-- Get the in-game position from pixel position
+function Screen.getTilePositionFloat(x, y)
     x = x - Camera.x
     y = (y - Camera.y)
-    return math.floor(x / TileSize) + 1, Screen.height - math.floor(y / TileSize)
+    return x / TileSize, tiles.height - y / TileSize - 1
 end
 
 -- Get the screen pixel position from a tile position
 function Screen.getScreenPosition(x, y)
-    return (x * TileSize) + Camera.x, (Screen.height * TileSize - ((y + 1) * TileSize)) + Camera.y
+    return (x * TileSize) + Camera.x, (tiles.height * TileSize - ((y + 1) * TileSize)) + Camera.y
 end
 
 -- Set a tile on the screen
@@ -54,39 +71,46 @@ function Screen.setTile(x, y, tile)
     tiles[x][y] = tile
 end
 
--- Convert pixel coordinates to where they should be drawn on the screen
-function Screen.adjustPositionForDrawing(x, y)
-    return x + Camera.x, (Screen.height * TileSize) - y + Camera.y
+-- Get a table with all of the tiles by numeric ID
+function Screen.getAllTiles()
+    local toSave = {}
+    toSave.spawn = tiles.spawn
+    toSave.exit = tiles.exit
+    toSave.width = tiles.width
+    toSave.height = tiles.height
+    for px = 1, tiles.width, 1 do
+        toSave[px] = {}
+        for py = 1, tiles.height, 1 do
+            toSave[px][py] = Screen.getTile(px, py).id
+        end
+    end
+    return toSave
 end
 
--- Convert pixel coordinates from virtual positions to where they are physically on the screen
-function Screen.adjustPositionForScreen(x, y)
-    return x - Camera.x, (Screen.height * TileSize) - y - Camera.y
-end
 
 -- Get a tile on the screen
 function Screen.getTile(x, y)
     local tile = tiles[x][y]
     if tile == nil then
-        return Tile.byName("air")
+        return Tile.byName["air"]
     end
     return tile
 end
 
 -- Draw the entire screen, call in love.draw
 function Screen.drawScreen()
-    for px = 1, Screen.width, 1 do
-        for py = 1, Screen.height, 1 do
+    for px = 1, tiles.width, 1 do
+        for py = 1, tiles.height, 1 do
             Screen.drawTile(Screen.getTile(px, py), px - 1, py - 1)
         end
     end
     if tiles.spawn ~= nil then
-        local posx, posy = Screen.adjustPositionForDrawing(tiles.spawn.x, tiles.spawn.y)
+        local posx, posy = Screen.getScreenPosition(tiles.spawn.x, tiles.spawn.y)
         love.graphics.setColor(0, 255, 0)
         love.graphics.circle("fill", posx, posy, TileSize / 2)
     end
     if tiles.exit ~= nil then
-        local posx, posy = Screen.adjustPositionForDrawing(tiles.exit.x, tiles.exit.y)
+        local posx, posy = Screen.getScreenPosition(tiles.exit.x, tiles.exit.y)
         love.graphics.setColor(255, 0, 0)
         love.graphics.circle("fill", posx, posy, TileSize / 2)
     end

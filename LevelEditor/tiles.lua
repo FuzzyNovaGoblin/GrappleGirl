@@ -3,15 +3,18 @@ require("camera")
 Tile = {
 	{
 		name = "air",
-		color = {255, 255, 255}
+		color = {255, 255, 255},
+		id = 1
 	},
 	{
 		name = "wall",
-		color = {0, 0, 0}
+		color = {0, 0, 0},
+		id = 2
 	},
 	{
 		name = "lava",
-		color = {255, 0, 0}
+		color = {255, 0, 0},
+		id = 3
 	}
 }
 TileSize = 20
