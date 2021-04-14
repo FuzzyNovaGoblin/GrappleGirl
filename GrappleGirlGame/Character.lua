@@ -43,6 +43,16 @@ function Character:draw()
 
     love.graphics.circle("fill", x, y, 10)
 
+    -- Draws sprite for weapon on spawn
+    Combat:update(x, y, angletomouse)
+    -- Debug print to see angletomouse
+    love.graphics.print(angletomouse, 250, 0)
+
+    -- Going to be used to fire bullets
+    if (love.keyboard.isDown("f")) then
+      -- Combat:attack(x + 10, y)
+    end
+
     if self.grapplepod.body ~= nil then
         local ax, ay = self.grapplepod.body:getPosition()
         ax, ay = Camera:applyOffset(ax, ay)
@@ -52,6 +62,12 @@ function Character:draw()
 end
 
 function Character:update(dt)
+  -- Added getting mouse x and y to be used to do angletomouse
+   mousex = love.mouse.getX()
+   mousey = love.mouse.getY()
+   mousex, mousey = Camera:applyOffset(mousex - 360, mousey - 540)
+   angletomouse = math.atan2(mousey, mousex)
+
     local f = 1000
     if (love.keyboard.isDown("a")) then
         self.body:applyForce(-f, 0)
