@@ -11,7 +11,7 @@ ENABLE_MUSIC = true
 MUSIC_VOLUME = 0.75
 
 
-local cfile,err =  loadfile("/home/fuzzy/.config/grapplegirl.conf", "txt")
+local cfile,err =  loadfile("~/.config/grapplegirl.conf", "txt")
 
 if cfile then
    cfile()
@@ -21,7 +21,7 @@ end
 CHARACTER_CATEGORY = 2
 GRAPPLEPOD_CATEGORY = 3
 FLOOR_CATEGORY = 4
-BLOCK_CATEGORY = 5
+BLOCK_CATEGORY = 4
 
 GRAPPLE_COIL_SPEED = 500
 BLOCK_WIDTH = 50

@@ -17,8 +17,6 @@ function Level:loadLevel(filename)
 
    gGirl.body:setX(level.spawn.x*BLOCK_WIDTH)
    gGirl.body:setY(-level.spawn.y*BLOCK_HEIGHT)
-   gGirl.body:setX(100)
-   gGirl.body:setY(-100)
 
 end
 

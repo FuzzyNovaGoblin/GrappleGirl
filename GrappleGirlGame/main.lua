@@ -14,13 +14,14 @@ function love.load()
     end
 
     baseWorld = love.physics.newWorld(0, 1000, false)
+    baseWorld:setGravity(0,0)
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
 
     viewport = Camera:new(love.graphics.getWidth(), love.graphics.getHeight(), 0.25, 0.40, nil, 0.20)
 
     baseWorld:setCallbacks(baseWorld.beginContact, baseWorld.endContact, mypresolve, mypostSolve)
 
-    Level:loadLevel("levels/level2.lua")
+    Level:loadLevel("levels/level1.lua")
 end
 
 function doesContainCatagory(fixt, cat)
