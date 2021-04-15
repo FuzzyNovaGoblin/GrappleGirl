@@ -37,6 +37,12 @@ function Character:new(o, world, pos, speed)
 end
 
 function Character:draw()
+  -- Added getting mouse x and y to be used to do angletomouse
+   local mousex, mousey = love.mouse.getPosition()
+   local playerx, playery = gGirl.body:getPosition()
+   mousex, mousey = Camera:reverseOffset(mousex, mousey)
+   local angletomouse = math.atan2(mousey - playery, mousex - playerx)
+
     local x, y = self.body:getPosition()
 
     x, y = Camera:applyOffset(x, y)
@@ -50,7 +56,7 @@ function Character:draw()
 
     -- Going to be used to fire bullets
     if (love.keyboard.isDown("f")) then
-      -- Combat:attack(x + 10, y)
+       -- Combat:attack(x + 10, y)
     end
 
     if self.grapplepod.body ~= nil then
@@ -62,11 +68,6 @@ function Character:draw()
 end
 
 function Character:update(dt)
-  -- Added getting mouse x and y to be used to do angletomouse
-   mousex = love.mouse.getX()
-   mousey = love.mouse.getY()
-   mousex, mousey = Camera:applyOffset(mousex - 360, mousey - 540)
-   angletomouse = math.atan2(mousey, mousex)
 
     local f = 1000
     if (love.keyboard.isDown("a")) then

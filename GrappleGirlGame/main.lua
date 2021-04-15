@@ -34,7 +34,7 @@ function love.load()
     -- grappleAnchorBlock end --
 
     -- Defined image of grapplegun
-    grapplegun = love.graphics.newImage("magnum.png")
+    WEAPONS.grapplegun.img = love.graphics.newImage("magnum.png")
 
     baseWorld:setCallbacks(baseWorld.beginContact, baseWorld.endContact, mypresolve, mypostSolve)
 end
