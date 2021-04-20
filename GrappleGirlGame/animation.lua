@@ -1,6 +1,6 @@
 local class = require("class")
 local Animation = class:derive("Animation")
-local vector2 = require("Vector2")
+local Vector2 = require("Vector2")
 
 -- credit to recursor on youtube
 
@@ -10,9 +10,9 @@ function Animation:new(xoffset, yoffset, w, h, column_size, num_frames, fps)
     self.frame = 1
     self.num_frames = num_frames
     self.column_size = column_size 
-    self.str_offset = vector2(xoffset, yoffset)
-    self.offset = vector2()
-    self.size = vector2(w, h)
+    self.start_offset = Vector2(xoffset, yoffset)
+    self.offset = Vector2()
+    self.size = Vector2(w, h)
 end
 
 function Animation:reset()
@@ -34,8 +34,8 @@ function Animation:update(dt, quad)
         if self.frame > self.num_frames then 
             self.frame = 1 
         end
-        self.offset.x = self.str_offset.x + (self.size.x * ((self.frame -1) % (self.column_size)))
-        self.offset.y = self.str_offset.y + (self.size.y * (self.size.y * math.floor((self.frame - 1) / self.column_size)))
+        self.offset.x = self.start_offset.x + (self.size.x * ((self.frame -1) % (self.column_size)))
+        self.offset.y = self.start_offset.y + (self.size.y * (self.size.y * math.floor((self.frame - 1) / self.column_size)))
         self:set(quad)
     end
 end

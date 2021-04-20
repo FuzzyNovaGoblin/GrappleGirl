@@ -14,7 +14,7 @@ function Class:derive(type)
     return cls
 end
 
-function Class:_call(...)
+function Class:__call(...)
     local inst = setmetatable({}, self)
     inst:new(...)
     return inst

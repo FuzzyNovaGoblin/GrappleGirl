@@ -3,11 +3,11 @@ require("love")
 require("music")
 require("camera")
 local Anim = require("animation")
+local Sprite = require("sprite")
 
 FLOOR_CATEGORY = 4
 
 local full_sprite
-local hero_sprite
 
 local angle = 0
 
@@ -19,14 +19,19 @@ local x_offset
 local num_frames = 6
 ---------------------
 
-local run = Anim:new(16, 32, 16, 16, 6, 6, 12)
+local spr
+local walk = Anim(16, 32, 16, 16, 6, 6, 12)
 
 function love.load()
     music = love.audio.play("audio/music/Dioma.mp3", "stream", true)
-    music:setVolume(0.75)
+    music:setVolume(0.25)
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
     full_sprite = love.graphics.newImage("sprites/hero.png")
+    spr = Sprite(full_sprite, 16, 16, 100, 100, 10, 10)
+    print(spr)
+    spr:add_animation("walk", walk)
+    spr:animate("walk")
     
     baseWorld = love.physics.newWorld(0, 1000, false)
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
@@ -69,7 +74,7 @@ end
 function love.update(dt)
     local contacts = baseWorld:getContacts()
 
-    run:update(dt)
+    spr:update(dt)
 
     for i = 1, #baseWorld:getContacts() do
         f1, f2 = contacts[i]:getFixtures()
@@ -129,7 +134,7 @@ function love.draw()
     gGirl:draw()
 
     --love.graphics.draw(full_sprite,25,25, 0, 1, 1)
-    love.graphics.draw(full_sprite, hero_sprite, 320, 180, math.rad(angle), 5, 5, 8, 8)
+    spr:draw()
 
     local gaPos = {}
     gaPos.x, gaPos.y = grappleAnchorBlock.body:getPosition()
