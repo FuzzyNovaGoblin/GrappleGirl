@@ -5,6 +5,9 @@ function Camera.update()
     -- Set default move speed
 	local diff = 8
 	-- If left shift is pressed, move faster
+	if love.keyboard.isDown("lctrl") then
+		return
+	end
 	if love.keyboard.isDown("lshift") then
 		diff = 20
 	end

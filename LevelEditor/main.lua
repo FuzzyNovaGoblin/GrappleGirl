@@ -1,6 +1,7 @@
 require("tiles")
 require("screen")
 require("camera")
+require("savefile")
 
 -- Initialize everything
 local selectedTile = Tile.byName["wall"]
@@ -10,6 +11,12 @@ local mousePressed = false
 local tileWidth, tileHeight
 
 function love.load(arg)
+	if #arg == 1 then
+		local filename = arg[1]
+		loadfile(filename)()
+		Screen.loadTiles(level)
+		return
+	end
 	if #arg < 2 then
 		local width, height = love.graphics.getDimensions()
 		tileWidth, tileHeight = width / TileSize, height / TileSize
@@ -25,7 +32,6 @@ function love.mousepressed(x, y, button, istouch, presses)
 		return
 	end
 	x, y = Screen.getTilePosition(x, y)
-	print(x.." "..y)
 	Screen.setTile(x, y, selectedTile)
 end
 
@@ -47,12 +53,19 @@ end
 function love.keypressed(key)
 	if key == "[" then
 		local x, y = love.mouse.getPosition()
-		x, y = Screen.adjustPositionForScreen(x, y)
+		x, y = Screen.getTilePositionFloat(x, y)
 		Screen.setSpawn(x, y)
 	elseif key == "]" then
 		local x, y = love.mouse.getPosition()
-		x, y = Screen.adjustPositionForScreen(x, y)
+		x, y = Screen.getTilePositionFloat(x, y)
 		Screen.setExit(x, y)
+	end
+	if key == "s" and love.keyboard.isDown("lctrl") then
+		SaveFile.save(Screen.getAllTiles(), "../level.lua")
+	end
+	local num = tonumber(key)
+	if num ~= nil then
+		selectedTile = Tile[num]
 	end
 end
 
