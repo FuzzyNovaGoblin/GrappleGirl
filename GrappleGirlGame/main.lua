@@ -2,15 +2,10 @@ require("Character")
 require("love")
 require("Music")
 require("camera")
-<<<<<<< HEAD
-local Anim = require("animation")
-local Sprite = require("sprite")
-
-FLOOR_CATEGORY = 4
-=======
 require("Levels")
 require("config")
->>>>>>> master
+local Anim = require("animation")
+local Sprite = require("sprite")
 
 local full_sprite
 
