@@ -1,9 +1,4 @@
-CHARACTER_CATEGORY = 2
-GRAPPLEPOD_CATEGORY = 3
-
-GRAPPLE_COIL_SPEED = 500
-SHORTEN_COIL_KEY = "w"
-LENGTHEN_COIL_KEY = "s"
+require("config")
 
 Character = {}
 
@@ -33,6 +28,8 @@ function Character:new(o, world, pos, speed)
         state = nil
     }
 
+    self.shouldAddGrapple = nil
+
     return o
 end
 
@@ -53,14 +50,14 @@ end
 
 function Character:update(dt)
     local f = 1000
-    if (love.keyboard.isDown("a")) then
+    if (love.keyboard.isDown(CHARACTER_LEFT_KEY)) then
         self.body:applyForce(-f, 0)
     end
-    if (love.keyboard.isDown("d")) then
+    if (love.keyboard.isDown(CHARACTER_RIGHT_KEY)) then
         self.body:applyForce(f, 0)
     end
 
-    if (self.canJump and love.keyboard.isDown("space")) then
+    if (self.canJump and love.keyboard.isDown(CHARACTER_JUMP_KEY)) then
         self.canJump = false
         self.body:applyLinearImpulse(0, -400)
     end
@@ -75,6 +72,27 @@ function Character:update(dt)
         if self.grapplepod.joint:getMaxLength() < 0 then
             self.grapplepod.joint:setMaxLength(0)
         end
+    end
+
+    if self.shouldAddGrapple ~= nil then
+        local d = self.shouldAddGrapple.d
+        local x2 = self.shouldAddGrapple.x2
+        local y2 = self.shouldAddGrapple.y2
+        local x = self.shouldAddGrapple.x
+        local y = self.shouldAddGrapple.y
+
+        self.grapplepod.fixture:destroy()
+        self.grapplepod.body:destroy()
+
+        self.grapplepod.body = love.physics.newBody(baseWorld, x, y, "static")
+        self.grapplepod.fixture = love.physics.newFixture(self.grapplepod.body, self.grapplepod.shape, 1)
+        self.grapplepod.fixture:setCategory(GRAPPLEPOD_CATEGORY)
+        self.grapplepod.fixture:setMask(CHARACTER_CATEGORY)
+
+        local dist, x1, y1, x2, y2 = love.physics.getDistance(self.fixture, self.grapplepod.fixture)
+
+        self.grapplepod.joint = love.physics.newRopeJoint(self.body, self.grapplepod.body, x1, y1, x2, y2, dist)
+        self.shouldAddGrapple = nil
     end
 end
 
