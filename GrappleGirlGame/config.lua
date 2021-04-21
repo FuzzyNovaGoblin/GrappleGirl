@@ -8,10 +8,10 @@ CHARACTER_RIGHT_KEY = "d"
 CHARACTER_JUMP_KEY="space"
 
 ENABLE_MUSIC = true
-MUSIC_VOLUME = 0.25
+MUSIC_VOLUME = 0.5
 
 
-local cfile,err =  loadfile("~/.config/grapplegirl.conf", "txt")
+local cfile,err =  loadfile("grapplegirl.conf", "txt")
 
 if cfile then
    cfile()
