@@ -28,7 +28,7 @@ function love.load()
     end
 
     baseWorld = love.physics.newWorld(0, 1000, false)
-    
+
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
 
     viewport = Camera:new(love.graphics.getWidth(), love.graphics.getHeight(), 0.25, 0.40, nil, 0.20)
@@ -72,7 +72,7 @@ end
 function love.draw()
     gGirl:draw()
     for i = 1, #(Level.blocks) do
-        Block:draw(Level.blocks[i])
+        Level.blocks[i]:draw()
 
     end
     -- print()
