@@ -19,9 +19,6 @@ local x_offset
 local num_frames = 6
 ---------------------
 
-local spr
-local walk = Anim(16, 32, 16, 16, 6, 6, 12)
-
 function love.load()
     music = playAudio("audio/music/Dioma.mp3", "stream", true)
     music:setVolume(MUSIC_VOLUME)
@@ -29,12 +26,6 @@ function love.load()
     if (not ENABLE_MUSIC) then
         stopAudio(music)
     end
-
-    love.graphics.setDefaultFilter('nearest', 'nearest')
-    full_sprite = love.graphics.newImage("sprites/hero.png")
-    spr = Sprite(full_sprite, 16, 16, 100, 100, 10, 10)
-    spr:add_animation("walk", walk)
-    spr:animate("walk")
 
     baseWorld = love.physics.newWorld(0, 1000, false)
     
@@ -63,7 +54,6 @@ function love.update(dt)
     baseWorld:update(dt)
     gGirl:update(dt)
     Camera:update(gGirl)
-    spr:update(dt)
     if gGirl.body then
         -- print(gGirl.body:getPosition())
     end
@@ -80,7 +70,6 @@ function love.keypressed(key)
 end
 
 function love.draw()
-    spr:draw()
     gGirl:draw()
     for i = 1, #(Level.blocks) do
         Block:draw(Level.blocks[i])
