@@ -14,6 +14,7 @@ function Sprite:new(atlas, w, h, x, y, sx, sy, angle)
     self.current_anim = ""
     self.angle = angle or 0
     self.quad = love.graphics.newQuad(0, 0, w, h, atlas:getDimensions())
+    self.xflip = false
 end
 
 function Sprite:animate(anim_name)
@@ -35,11 +36,8 @@ function Sprite:update(dt)
 end
 
 function Sprite:draw()
-    love.graphics.draw(self.atlas, self.quad, self.pos.x, self.pos.y, self.angle, self.scale.x, self.scale.y, self.w / 2, self.h / 2)
+    local flipx = (self.xflip) and -1 or 1
+    love.graphics.draw(self.atlas, self.quad, self.pos.x, self.pos.y, self.angle, flipx * self.scale.x, self.scale.y, self.w / 2, self.h / 2)
 end
 
 return Sprite
-
-
-
-

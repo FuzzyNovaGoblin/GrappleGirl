@@ -6,6 +6,7 @@ local Vector2 = require("Vector2")
 
 Character = {}
 local walk = Anim(16, 32, 16, 16, 6, 6, 12)
+local fall = Anim(96, 32, 16, 32, 1, 1, 12)
 
 function Character:new(o, world, pos, speed)
     o = o or {}
@@ -37,10 +38,11 @@ function Character:new(o, world, pos, speed)
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
     local full_sprite = love.graphics.newImage("sprites/hero.png")
-    self.spr = Sprite(full_sprite, 20, 20, 100, 100, 1, 1)
+    self.spr = Sprite(full_sprite, 20, 20, 100, 100, 1.6, 1.6)
     self.spr:add_animation("walk", walk)
+    self.spr:add_animation("fall", fall)
     self.spr:animate("walk")
-    
+
     return o
 end
 
@@ -49,6 +51,15 @@ function Character:draw()
 
     x, y = Camera:applyOffset(x, y)
     self.spr.pos = Vector2(x, y)
+
+    local linx, liny =self.body:getLinearVelocity()
+
+    if(linx < 0) then
+        self.spr.xflip = true
+    elseif(linx > 0) then
+        self.spr.xflip = false
+    end
+
     self.spr:draw()
 
     --love.graphics.circle("fill", x, y, 10)
