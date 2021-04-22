@@ -25,7 +25,7 @@ function Character:new(o, world, pos, speed)
     self.fixture:setUserData(o)
 
     self.canJump = true
-
+    self.startPos = {x = 0, y = 0}
     self.grapplepod = {
         joint = nil,
         fixture = nil,
@@ -36,7 +36,7 @@ function Character:new(o, world, pos, speed)
 
     self.shouldAddGrapple = nil
 
-    love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.graphics.setDefaultFilter("nearest", "nearest")
     local full_sprite = love.graphics.newImage("sprites/hero.png")
     self.spr = Sprite(full_sprite, 20, 20, 100, 100, 1.6, 1.6)
     self.spr:add_animation("walk", walk)
@@ -52,11 +52,11 @@ function Character:draw()
     x, y = Camera:applyOffset(x, y)
     self.spr.pos = Vector2(x, y)
 
-    local linx, liny =self.body:getLinearVelocity()
+    local linx, liny = self.body:getLinearVelocity()
 
-    if(linx < 0) then
+    if (linx < 0) then
         self.spr.xflip = true
-    elseif(linx > 0) then
+    elseif (linx > 0) then
         self.spr.xflip = false
     end
 
@@ -90,10 +90,10 @@ function Character:update(dt)
     end
 
     if self.grapplepod.joint ~= nil then
-        if (self.canJump and love.keyboard.isDown(LENGTHEN_COIL_KEY)) then
+        if (love.keyboard.isDown(LENGTHEN_COIL_KEY)) then
             self.grapplepod.joint:setMaxLength(self.grapplepod.joint:getMaxLength() + dt * GRAPPLE_COIL_SPEED)
         end
-        if (self.canJump and love.keyboard.isDown(SHORTEN_COIL_KEY)) then
+        if (love.keyboard.isDown(SHORTEN_COIL_KEY)) then
             self.grapplepod.joint:setMaxLength(self.grapplepod.joint:getMaxLength() - dt * GRAPPLE_COIL_SPEED)
         end
         if self.grapplepod.joint:getMaxLength() < 0 then
@@ -148,4 +148,9 @@ function Character:ropeMouseReleasedCallbackshootRope()
     self.grapplepod.body = nil
     self.grapplepod.fixture = nil
     self.grapplepod.joint = nil
+end
+
+function Character:goToStart()
+   self.body:setX(self.startPos.x)
+   self.body:setY(self.startPos.y)
 end

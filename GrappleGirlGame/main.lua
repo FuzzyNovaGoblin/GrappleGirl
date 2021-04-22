@@ -50,12 +50,22 @@ function doesContainCatagory(fixt, cat)
     return false
 end
 
+function isCatagoryPair(f1, f2, cat1, cat2)
+    if (doesContainCatagory(f1, cat1) and doesContainCatagory(f2, cat2)) then
+        return f1, f2
+    elseif (doesContainCatagory(f2, cat1) and doesContainCatagory(f1, cat2)) then
+        return f2, f1
+    end
+
+    return nil
+end
+
 function love.update(dt)
     baseWorld:update(dt)
     gGirl:update(dt)
     Camera:update(gGirl)
     if gGirl.body then
-        -- print(gGirl.body:getPosition())
+    -- print(gGirl.body:getPosition())
     end
 end
 
@@ -73,7 +83,6 @@ function love.draw()
     gGirl:draw()
     for i = 1, #(Level.blocks) do
         Level.blocks[i]:draw()
-
     end
     -- print()
     -- print()
@@ -115,6 +124,12 @@ function mypostSolve(f1, f2, contact)
     end
 end
 function mypreSolve(f1, f2, contact)
+    -- lava solve
+    local lava, player = isCatagoryPair(LAVA_CATEGORY, CHARACTER_CATEGORY)
+    if (lava ~= nill) then
+        print(lava,player)
+        print()
+    end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
