@@ -1,4 +1,5 @@
 require("config")
+require("Music")
 local Anim = require("animation")
 local Sprite = require("sprite")
 local sprite = require "sprite"
@@ -47,12 +48,31 @@ function Character:new(o, world, pos, speed)
 end
 
 function Character:draw()
+  local mousex, mousey = love.mouse.getPosition()
+  local playerx, playery = gGirl.body:getPosition()
+  mousex, mousey = Camera:reverseOffset(mousex, mousey)
+  local angletomouse = math.atan2(mousey - playery, mousex - playerx)
+
     local x, y = self.body:getPosition()
 
     x, y = Camera:applyOffset(x, y)
     self.spr.pos = Vector2(x, y)
 
-    local linx, liny =self.body:getLinearVelocity()
+    weapon:rotateUpdate(x, y, angletomouse)
+    -- love.graphics.setColor(0, 0.5, 1)
+    -- love.graphics.print(math.deg(angletomouse), 250, 0)
+    -- love.graphics.setColor(1, 1, 1)
+
+    -- When button pressed spawns bullets in mouses direction
+    if (love.mouse.isDown(2)) then
+      if canFire then
+       weapon:shoot(x, y, angletomouse)
+       canFire = false
+     end
+    end
+    love.graphics.setColor(1, 1, 1)
+
+    local linx, liny = self.body:getLinearVelocity()
 
     if(linx < 0) then
         self.spr.xflip = true
@@ -140,6 +160,11 @@ function Character:ropeMousePressedCallbackshootRope(vp)
 
     local vx, vy = normalize(mx - x, my - y)
     self.grapplepod.body:setLinearVelocity(vx * 1500, vy * 1500)
+
+    rand = math.random(1, 5)
+    if rand < 4 then
+      playAudio("audio/grapplegirl_voicelines/grappleaway"..rand..".mp3", "stream", false)
+    end
 end
 
 function Character:ropeMouseReleasedCallbackshootRope()

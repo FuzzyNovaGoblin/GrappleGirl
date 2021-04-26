@@ -2,6 +2,7 @@ require("Character")
 require("love")
 require("Music")
 require("camera")
+require("weapons")
 require("Levels")
 require("config")
 local Anim = require("animation")
@@ -26,9 +27,11 @@ function love.load()
     if (not ENABLE_MUSIC) then
         stopAudio(music)
     end
+    -- Sets title for window
+    love.window.setTitle('Grapple Girl')
 
     baseWorld = love.physics.newWorld(0, 1000, false)
-    
+
     gGirl = Character:new(nil, baseWorld, {love.graphics.getWidth() / 2, 100}, {400, 400})
 
     viewport = Camera:new(love.graphics.getWidth(), love.graphics.getHeight(), 0.25, 0.40, nil, 0.20)
@@ -36,6 +39,20 @@ function love.load()
     baseWorld:setCallbacks(baseWorld.beginContact, baseWorld.endContact, mypresolve, mypostSolve)
 
     Level:loadLevel("levels/level1.lua")
+
+    -- Draws weapon on spawn and creates images
+    loadweapon = weapon:draw()
+    WEAPONS.grapplegun.img = love.graphics.newImage("sprites/magnum.png")
+    WEAPONS.bullet.img = love.graphics.newImage("sprites/bullet.png")
+
+    -- Limits bullet firerate
+    canFire = true
+    fire_tick = 0
+    fire_wait = 0.1
+    -- Bullets table
+    bullets = {
+      bulletSpeed = 250
+    }
 end
 
 function doesContainCatagory(fixt, cat)
@@ -54,6 +71,31 @@ function love.update(dt)
     baseWorld:update(dt)
     gGirl:update(dt)
     Camera:update(gGirl)
+
+    -- Table for bullets
+    for i,v in ipairs(bullets) do
+      v.x = v.x + (v.dx * dt)
+      v.y = v.y + (v.dy * dt)
+    end
+
+    -- Cleans up bullets that are off screen
+    for i = #bullets, 1, -1 do
+      local o = bullets[i]
+      if(o.x > love.graphics.getWidth() + 10)
+      or(o.y > love.graphics.getWidth() + 10) then
+        table.remove(bullets, i)
+      end
+    end
+
+    -- Limits firerate of bullets
+    if not canFire then
+      fire_tick = fire_tick + dt
+      if fire_tick > fire_wait then
+        canFire = true
+        fire_tick = 0
+      end
+    end
+
     if gGirl.body then
         -- print(gGirl.body:getPosition())
     end
@@ -73,8 +115,16 @@ function love.draw()
     gGirl:draw()
     for i = 1, #(Level.blocks) do
         Block:draw(Level.blocks[i])
-
     end
+
+    -- Spawns bullets
+    weapon:spawnBullets(angletomouse)
+
+    -- FPS counter
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.print(love.timer.getFPS(), love.graphics.getWidth() - 25, 0)
+    love.graphics.setColor(1, 1, 1)
+
     -- print()
     -- print()
     -- print(#Level.blocks)
@@ -86,12 +136,22 @@ function mypostSolve(f1, f2, contact)
             ((doesContainCatagory(f1, FLOOR_CATEGORY) and doesContainCatagory(f2, CHARACTER_CATEGORY)) or
                 (doesContainCatagory(f2, FLOOR_CATEGORY) and doesContainCatagory(f1, CHARACTER_CATEGORY)))
      then
+        if  gGirl.canJump ~= true then
         if doesContainCatagory(f1, FLOOR_CATEGORY) then
             charFic = f2
+            rand = math.random(1, 5)
+            if rand < 4 then
+              playAudio("audio/grapplegirl_voicelines/ow"..rand..".mp3", "stream", false)
+            end
         else
             charFic = f1
+            rand = math.random(1, 4)
+            if rand < 3 then
+              playAudio("audio/grapplegirl_voicelines/bigdrop"..rand..".mp3", "stream", false)
+            end
         end
         charFic:getUserData().canJump = true
+    end
     end
 
     local podf = nil
