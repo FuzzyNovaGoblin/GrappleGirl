@@ -136,6 +136,7 @@ function mypostSolve(f1, f2, contact)
             ((doesContainCatagory(f1, FLOOR_CATEGORY) and doesContainCatagory(f2, CHARACTER_CATEGORY)) or
                 (doesContainCatagory(f2, FLOOR_CATEGORY) and doesContainCatagory(f1, CHARACTER_CATEGORY)))
      then
+        if  gGirl.canJump ~= true then
         if doesContainCatagory(f1, FLOOR_CATEGORY) then
             charFic = f2
             rand = math.random(1, 5)
@@ -150,6 +151,7 @@ function mypostSolve(f1, f2, contact)
             end
         end
         charFic:getUserData().canJump = true
+    end
     end
 
     local podf = nil
