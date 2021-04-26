@@ -8,3 +8,10 @@ You are Dame Alicia Turner, you live in Greater England in the year 2201. You ar
 
 ## Dependencies 
 [Love2D](https://love2d.org/)
+
+## Launch Instructions
+```sh
+git clone https://github.com/FuzzyNovaGoblin/GrappleGirl
+cd grapplegirl/
+love grapplegirlgame/
+```
