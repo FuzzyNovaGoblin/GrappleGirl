@@ -1,5 +1,5 @@
 require("config")
-require("music")
+require("Music")
 local Anim = require("animation")
 local Sprite = require("sprite")
 local sprite = require "sprite"
